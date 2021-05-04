@@ -1,0 +1,187 @@
+﻿<!DOCTYPE.html>
+<html>
+
+<head>
+	<!-- come titolo usare il nome del file-->
+	<title>Modulo 114</title>
+	<link rel="shortcut icon" type="image/x-icon" href="i19borewa.ico">
+	<link rel="icon" href="/i19borewa.ico" type="image/x-icon">
+	
+	<meta charset= "UTF-8">
+	<meta name= "author" content= "i19borewa">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+	<!-- Google Chrome-->
+	<!-- Windows 10-->
+	<!-- 20.04.2021-->
+	<!-- 21.04.2021-->
+    
+    
+    <!--OGNI PAROLA VIENE DIVISA IN CARATTERI E OGNUNO DI LORO VIENE SOMMATO AL VALORE CHE SI TROVA ALLO STESSO INDEX DELLA CHIAVE, PER OGNI PAROLA SI COMINCIA USARE LA CHIAVE UN VALORE DOPO E VIA DICENDO
+, SE SI SUPERA IL NUMERO DI VALORI PRESENTE NELLA CHIAVE SI RIPARTE DA 0, SE LA CHIAVE FINISCE SI RICOMINCIA DA CAPO.  -->
+    
+    <script>
+        const CHARACTERS = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+        const CHARS_LEN = CHARACTERS.length;
+        var codificaInterval = setInterval(codifica, 100);    
+        /*var decodificaInterval = setInterval(decodifica, 100);
+        clearInterval(decodificaInterval);*/
+        function chiaveCasuale(){
+            var result = [];
+            var keyLength = 26;
+            for ( var i = 0; i < keyLength; i++ ) {
+                result[i] = (CHARACTERS.charAt(Math.floor(Math.random() * CHARACTERS.length)));
+            }
+            var key = "";
+            document.getElementById("chiave").value = key;
+            for ( var i = 0; i < keyLength; i++ ) {
+                key += result[i];
+            }
+            document.getElementById("chiave").value = key;
+        }
+        
+        function getIndex(char){
+            for(var i = 0; i < CHARACTERS.length; i++ ) {
+                if(char == CHARACTERS.charAt(i)){
+                    return i;
+                }
+            }
+            return -1;
+        }
+        
+        function codifica()
+        {
+            var key = document.getElementById("chiave").value;
+            var plaintext = document.getElementById("fromText").value;
+            var plainArray = plaintext.split(" ");
+            var chiperArray = [plainArray.length];
+            for(var i = 0; i < plainArray.length; i++ ) {
+                var plainWord = plainArray[i];
+                var chiperWord = "";
+                for(var j = 0; j < plainWord.length; j++ ) {
+                    var sum = getIndex(plainWord.charAt(j));
+                    sum += getIndex(key.charAt((j+i)%key.length));
+                    chiperWord = chiperWord.concat(CHARACTERS.charAt(sum%CHARS_LEN));
+                }
+                chiperArray[i] = chiperWord;
+            }
+            var chipertext = "";
+            for(var i = 0; i < chiperArray.length; i++ ) {
+                var text = chiperArray[i].concat(" "); 
+                chipertext = chipertext.concat(text);
+            }
+            document.getElementById("toText").value = chipertext;
+        }
+        
+        /*function decodifica()
+        {
+            var key = document.getElementById("chiave").value;
+            var chipertext = document.getElementById("fromText").value;
+            var plaintext = "ciao";
+            
+            document.getElementById("toText").value = plaintext;
+        }*/
+        
+        /*function codificatore()
+        {
+            document.getElementById("fromTitle").innerHTML = "PlainText";
+            document.getElementById("toTitle").innerHTML = "ChiperText";
+            document.getElementById("typeTitle").innerHTML = "Codificatore";
+            document.getElementById("typeButton").onclick = "codifica();";
+        }*/
+        
+        /*function decodificatore()
+        {
+            document.getElementById("fromTitle").innerHTML = "Chipertext";
+            document.getElementById("toTitle").innerHTML = "Plaintext";
+            document.getElementById("typeTitle").innerHTML = "Decodificatore";
+            document.getElementById("typeButton").onclick = "decodifica();";
+        }*/
+      </script>
+    
+      <style>
+            *{
+                font-size: 3vw;
+                box-sizing: border-box;
+            }
+            .title{
+                margin: 1vw;
+                text-align:center;
+                font-family: fantasy;
+                color:white;
+                background-color: darkblue;
+                border: solid black 0.2vw;
+            }
+          
+            input[type="button"]
+            {
+                background-color:deepskyblue;
+                color: black;
+                border: solid black 0.2vw;;
+                margin: 1vw;
+            }
+
+            textarea
+            {
+                background-color:white;
+                border: solid black 0.2vw;
+                border-radius: 10px;
+                width: 100%;
+                font-size: 1.5vw;
+                resize:none;
+            }
+
+            body{
+                background-color: lightskyblue;                
+            }
+            h2{
+                margin-bottom: 0px; 
+            }
+            .column {
+                float: left;
+                width: 45%;
+                padding: 10px;
+                height: 300px;
+            }
+            .columnCentral {
+                float: left;
+                width: 10%;
+                padding: 10px;
+                height: 300px;
+            }
+            .row:after {
+                content: "";
+                display: table;
+                clear: both;
+            }
+      </style>
+</head>
+
+
+<body>
+	<div class = "title">CODEC Borsa (alfanumerico)</div>
+    <div style="text-align: center">
+        <!--<input type="button" value="CO" onclick="codificatore()"/>-->
+        <input type="button" value="Genera chiave casuale" onclick="chiaveCasuale()"/>
+        <!--<input type="button" value="DEC" onclick="decodificatore()"/>-->
+        <br>
+        <input style="width: 69%" type="text" id="chiave"/>
+        <br>
+        <h2 id="typeTitle">Codificatore</h2>
+        <div class="row">
+            <div class="column">
+                <span id="fromTitle">Plaintext</span>
+                <textarea id="fromText" rows="15"></textarea>
+            </div>
+            <div class="columnCentral">
+                <span id="direction">=></span>
+            </div>
+            <div class="column">
+                <span id="toTitle">Chipertext</span>
+                <textarea id="toText" readonly="true" rows="15"></textarea>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>
